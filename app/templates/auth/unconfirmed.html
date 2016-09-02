@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}INnoVation的小站 - 验证你的邮箱{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>
+            你好, {{ current_user.username }}!
+        </h1>
+        <h3>你还没有验证您的邮箱.</h3>
+        <p>
+            要进入这个网页,您必须先验证您的注册邮箱.
+            点击您的邮箱, 您应该收到了一封验证邮件.
+        </p>
+        <p>
+            需要重新发送一封邮件?
+            <a href="{{ url_for('auth.resend_confirmation') }}">Click here</a>
+        </p>
+    </div>
+{% endblock %}

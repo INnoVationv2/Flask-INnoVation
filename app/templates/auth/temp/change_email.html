@@ -1,0 +1,9 @@
+<p>亲爱的{{ user.username }},</p>
+<p>您申请了修改邮箱，您可以点击来完成修改：<a href="{{ url_for('auth.change_email', token=token, _external=True) }}">点击这里</a>.</p>
+<p>也可以点击这个链接完成修改:</p>
+<p>{{ url_for('auth.change_email', token=token, _external=True) }}</p>
+<p>祝使用愉快</p>
+<p>INnoVation的小站!</p>
+<p>
+    <small>提示: 回复此邮件无效.</small>
+</p>

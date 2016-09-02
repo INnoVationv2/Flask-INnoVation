@@ -1,0 +1,11 @@
+亲爱的 {{ user.username }},
+
+点击这个链接完成修改
+
+{{ url_for('auth.change_email', token=token, _external=True) }}
+
+祝使用愉快
+
+INnoVation的小站
+
+提示: 回复此邮件无效

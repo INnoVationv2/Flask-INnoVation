@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}INnoVation的小站 - 个人信息{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>{{ user.username }}</h1>
+        {% if user.name or user.location %}
+            <p style="font-size:20px">姓名:{% if user.name %}{{ user.name }}{% endif %}</p>
+            {% if user.location %}
+                <p style="font-size:20px">住址:<a
+                        href="http://maps.baidu.com/?q={{ user.location }}">{{ user.location }}</a></p>
+            {% endif %}
+        {% endif %}
+        {% if current_user.is_administrator() %}
+            <p style="font-size:20px">邮箱:<a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+        {% endif %}
+        {% if user.about_me %}<p style="font-size:20px">个人介绍:{{ user.about_me }}</p>{% endif %}
+        <p>注册时间{{ moment(user.member_since).format('L') }}. </p>
+        <p>上一次登录 {{ moment(user.last_since).fromNow() }}.</p>
+        <p>{{ posts.__len__() }} 篇文章.</p>
+        <p>
+            {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+                {% if not current_user.is_following(user) %}
+                    <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">关注</a>
+                {% else %}
+                    <a href="{{ url_for('.unfollow', username=user.username) }}"
+                       class="btn btn-default">取消关注</a>
+                {% endif %}
+            {% endif %}
+            <a href="{{ url_for('.followers', username=user.username) }}">粉丝: <span
+                    class="badge">{{ ++followers.__len__() }}</span></a>
+            <a href="{{ url_for('.following', username=user.username) }}">{{ user.username }}关注的人: <span
+                    class="badge">{{ ++following.__len__() }}</span></a>
+            {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
+                | <span class="label label-default">他关注了你</span>
+            {% endif %}
+        </p>
+        <p>
+            {% if user == current_user %}
+                <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">更改资料</a>
+            {% endif %}
+            {% if current_user.is_administrator() %}
+                <a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">更改资料[管理员]</a>
+            {% endif %}
+        </p>
+    </div>
+    <h3>{{ user.username }}发布的文章</h3>
+    {% include '_posts.html' %}
+    {% if pagination %}
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.user', username=user.username) }}
+        </div>
+    {% endif %}
+{% endblock %}
